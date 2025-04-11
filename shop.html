@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VegMina - Shop</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-purple-50 text-gray-900">
+
+  <!-- ✅ Navbar (Same as index.html) -->
+  <header class="fixed top-0 left-0 w-full z-50 text-gray-600 body-font bg-purple-400 shadow-md">
+    <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+      <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             fill="none"
+             stroke="currentColor"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             stroke-width="2"
+             class="w-10 h-10 text-white p-2 bg-red-500 rounded-full"
+             viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+        <span class="ml-3 text-xl">VegMina</span>
+      </a>
+      <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+        <a class="mr-5 hover:text-gray-900" href="/index.html">HOME</a>
+        <a class="mr-5 hover:text-gray-900" href="/shop.html">SHOP</a>
+        <a class="mr-5 hover:text-gray-900" href="/cart.html">CART</a>
+        <a class="mr-5 hover:text-gray-900" href="/aboutus.html">ABOUT US</a>
+        <a class="mr-5 hover:text-gray-900" href="/contactus.html">CONTACT US</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 🛍️ Shop Section -->
+  <section class="pt-32 pb-8 px-6">
+    <h2 class="text-3xl font-bold mb-6 text-center">Our Fresh Picks</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="product-list">
+      <!-- JS will populate products here -->
+    </div>
+  </section>
+
+  <!-- ✅ Checkout Button -->
+  <section class="pb-12 flex justify-center">
+    <a href="/cart.html"
+       class="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded shadow-md transition duration-200">
+      🛒 Go to Cart
+    </a>
+  </section>
+
+  <!-- 💾 JavaScript -->
+  <script>
+    const products = [
+      {
+        id: 1,
+        name: "Tomatoes",
+        price: 40,
+        image: "https://tse1.mm.bing.net/th?id=OIP.yUdE0z5-8t5qg8-u5lwRIwHaE8&pid=Api&P=0&h=180"
+      },
+      {
+        id: 2,
+        name: "Potatoes",
+        price: 30,
+        image: "https://tse1.mm.bing.net/th?id=OIP.wKsaxgrGFVXbL8afU2-5aQHaE8&pid=Api&P=0&h=180"
+      },
+      {
+        id: 3,
+        name: "Carrots",
+        price: 50,
+        image: "https://tse1.mm.bing.net/th?id=OIP.l_0nRm4bokIj-O0BRzd9jgHaE7&pid=Api&P=0&h=180"
+      },
+      {
+        id: 4,
+        name: "Onions",
+        price: 35,
+        image: "https://tse3.mm.bing.net/th?id=OIP.QBSQ2BcQkdbd98qS2DfOjwHaEK&pid=Api&P=0&h=180"
+      },
+      {
+        id: 5,
+        name: "Broccoli",
+        price: 60,
+        image: "https://tse3.mm.bing.net/th?id=OIP.3cIUFJ-mXmYzTyi8AyyXsgHaE7&pid=Api&P=0&h=180"
+      }
+    ];
+
+    function displayProducts() {
+      const container = document.getElementById("product-list");
+      container.innerHTML = '';
+      products.forEach(product => {
+        container.innerHTML += `
+          <div class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center text-center">
+            <img src="${product.image}" alt="${product.name}" class="h-40 w-full object-cover rounded mb-4" />
+            <div class="text-xl font-bold">${product.name}</div>
+            <div class="mb-2 text-gray-700">₹${product.price} / kg</div>
+            <input type="number" id="qty-${product.id}" min="1" value="1" class="border p-1 w-20 rounded text-center mb-3" />
+            <button onclick="addToCart(${product.id})"
+                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+              Add to Cart
+            </button>
+          </div>
+        `;
+      });
+    }
+
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      const qtyInput = document.getElementById(`qty-${id}`);
+      const quantity = parseInt(qtyInput.value);
+
+      if (!quantity || quantity <= 0) {
+        alert("Please enter a valid quantity.");
+        return;
+      }
+
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) {
+        existing.quantity += quantity;
+      } else {
+        cart.push({ id: product.id, name: product.name, price: product.price, quantity });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(`${product.name} added to cart!`);
+    }
+
+    window.onload = displayProducts;
+  </script>
+
+</body>
+</html>

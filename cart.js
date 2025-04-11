@@ -54,3 +54,15 @@ function editItem(index) {
     renderItems();
   }
 }
+
+window.onload = function () {
+  const itemList = document.getElementById("itemList");
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  cart.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = `${item.name} - ₹${item.price} x ${item.qty}`;
+    li.className = "p-2 bg-white rounded shadow";
+    itemList.appendChild(li);
+  });
+};
